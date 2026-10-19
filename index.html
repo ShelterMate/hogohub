@@ -7417,7 +7417,7 @@ details.org-section-acc[open] summary::after { transform: rotate(180deg); }
   .pm-hero-pic { aspect-ratio: 4 / 3; } /* 正方形だと縦長に見えるので、少し横長に */
 }
 /* スマホ(縦積み): 仕組みの文章と次のイラスト(チャットの吹き出しが上にはみ出す)の間をあける */
-@media (max-width: 560px) { .hw-ills { gap: 64px; } #howItWorks .hw-ill-item--chat { margin-top: 20px; } } /* チャットの吹き出しが上に20pxはみ出す分を足して、3つの間隔をそろえる */
+@media (max-width: 560px) { .hw-ills { gap: 64px; } #howItWorks .hw-ill-item--chat, #sec-about .hw-ill-item--chat { margin-top: 20px; } } /* チャットの吹き出しが上に20pxはみ出す分を足して、3つの間隔をそろえる */
 
 /* ===== 公開前ホームページ用の追加スタイル ===== */
 a.pm-cta-btn { text-decoration: none; }
