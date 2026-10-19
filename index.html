@@ -7419,6 +7419,10 @@ details.org-section-acc[open] summary::after { transform: rotate(180deg); }
 @media (max-width: 720px) {
   .header { flex-direction: row; align-items: center; justify-content: space-between; }
   .nav-toggle { align-self: center; margin-left: 12px; }
+  /* ヒーローの文字 (指定: 27px / 38px / 19px)。.pm-hero-frame に zoom: 0.66 がかかっているので、画面上はこの約2/3で表示される */
+  .pm-hero-eyebrow { font-size: 27px; }
+  .pm-hero-title { font-size: 38px; }
+  .pm-hero-sub { font-size: 19px; }
   .lp-top { margin-top: 0; } /* ヘッダーが低くなったので、ヒーローを上に食い込ませない (ロゴが隠れる) */
 }
 /* スマホ(縦積み): 仕組みの文章と次のイラスト(チャットの吹き出しが上にはみ出す)の間をあける */
