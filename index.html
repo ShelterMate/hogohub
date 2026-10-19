@@ -8698,23 +8698,59 @@ buildFooter();
     'assets/intro-vid/v11.mp4',
     'assets/intro-vid/v12.mp4'
   ];
+  // 2枚の video を重ね、再生中に次の動画を裏で読み込んでおき、終わる直前にクロスフェードで切り替える
+  // (1枚で src を差し替えると、スマホでは読み込みの間に止まって見えるため)
   function attach(id){
-    var el = document.getElementById(id);
-    if (!el || el.dataset.on) return;
-    el.dataset.on = '1';
-    var idx = 0, started = false;
-    function load(){ el.src = VIDS[idx]; try{ el.load(); }catch(e){} var p = el.play(); if (p && p.catch) p.catch(function(){}); }
-    function next(){ idx = (idx + 1) % VIDS.length; load(); } // 最後まで再生→次へ、一巡したら先頭へ
-    el.addEventListener('ended', next);
-    el.addEventListener('error', function(){ setTimeout(next, 800); });
+    var a = document.getElementById(id);
+    if (!a || a.dataset.on) return;
+    a.dataset.on = '1';
+    var parent = a.parentElement;
+    if (getComputedStyle(parent).position === 'static') parent.style.position = 'relative';
+    var b = a.cloneNode(false);
+    b.removeAttribute('id');
+    b.setAttribute('aria-hidden', 'true');
+    b.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;transition:opacity .5s ease;pointer-events:none;';
+    a.after(b);
+    [a, b].forEach(function(v){ v.muted = true; v.playsInline = true; v.preload = 'auto'; });
+    var idx = 0, cur = a, nxt = b, started = false, switching = false, visible = true;
+    function play(v){ var p = v.play(); if (p && p.catch) p.catch(function(){}); }
+    function prepare(v, i){ v.src = VIDS[i]; try{ v.load(); }catch(e){} }
+    function swap(){
+      if (switching) return;
+      switching = true;
+      var go = function(){
+        nxt.removeEventListener('canplay', go);
+        try{ nxt.currentTime = 0; }catch(e){}
+        if (visible) play(nxt);
+        b.style.opacity = (nxt === b) ? '1' : '0'; // 上の b を出す/消すだけで、下の a と入れ替わる
+        var old = cur;
+        cur = nxt; nxt = old;
+        idx = (idx + 1) % VIDS.length;
+        setTimeout(function(){
+          try{ old.pause(); }catch(e){}
+          prepare(old, (idx + 1) % VIDS.length); // 次の次を裏で読み込む
+          switching = false;
+        }, 600);
+      };
+      if (nxt.readyState >= 3) go(); else nxt.addEventListener('canplay', go);
+    }
+    [a, b].forEach(function(v){
+      v.addEventListener('timeupdate', function(){
+        if (v === cur && v.duration && v.duration - v.currentTime < 0.45) swap();
+      });
+      v.addEventListener('ended', function(){ if (v === cur) swap(); });
+      v.addEventListener('error', function(){ if (v === cur) setTimeout(swap, 800); });
+    });
+    function start(){ started = true; prepare(cur, idx); play(cur); prepare(nxt, (idx + 1) % VIDS.length); }
     if ('IntersectionObserver' in window){
       new IntersectionObserver(function(entries){
         entries.forEach(function(e){
-          if (e.isIntersecting){ if (!started){ started = true; load(); } else { var p = el.play(); if (p && p.catch) p.catch(function(){}); } }
-          else { try{ el.pause(); }catch(e2){} }
+          visible = e.isIntersecting;
+          if (visible){ if (!started) start(); else play(cur); }
+          else { try{ cur.pause(); }catch(e2){} }
         });
-      }, { threshold: 0.2 }).observe(el);
-    } else { load(); }
+      }, { threshold: 0.2 }).observe(a);
+    } else { start(); }
   }
   function init(){ attach('abFeatureVideo'); attach('heroVideo'); }
   if (document.readyState === 'complete' || document.readyState === 'interactive') init();
