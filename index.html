@@ -7415,6 +7415,12 @@ details.org-section-acc[open] summary::after { transform: rotate(180deg); }
   .hero-deco--y-bl, .hero-deco--y-br { display: none; } /* 動画の下・両端の黄色の丸は出さない */
   .pm-hero-pic { aspect-ratio: 4 / 3; } /* 正方形だと縦長に見えるので、少し横長に */
 }
+/* スマホ: ヘッダーはロゴ(左)とメニュー(右)を横一列に並べ、重ならないようにする */
+@media (max-width: 720px) {
+  .header { flex-direction: row; align-items: center; justify-content: space-between; }
+  .nav-toggle { align-self: center; margin-left: 12px; }
+  .lp-top { margin-top: 0; } /* ヘッダーが低くなったので、ヒーローを上に食い込ませない (ロゴが隠れる) */
+}
 /* スマホ(縦積み): 仕組みの文章と次のイラスト(チャットの吹き出しが上にはみ出す)の間をあける */
 @media (max-width: 560px) { .hw-ills { gap: 64px; } #howItWorks .hw-ill-item--chat, #sec-about .hw-ill-item--chat { margin-top: 20px; } } /* チャットの吹き出しが上に20pxはみ出す分を足して、3つの間隔をそろえる */
 
@@ -7623,7 +7629,7 @@ a.pm-cta-btn { text-decoration: none; }
   .abx-service .abx-story-title { font-size: 23px; }
   .abx-service .abx-story-inner p, .abx-origin .abx-story-inner p { text-align: center; }
   .abx-service .abx-story-inner p br, .abx-service .sp-br, .abx-origin .abx-story-inner p br, .abx-origin .sp-br { display: inline; }
-  .abx-service .abx-story-inner p br.pc-br { display: none; } /* PCだけで改行する位置 */
+  .abx-service .abx-story-inner p br.pc-br, .abx-origin .abx-story-inner p br.pc-br { display: none; } /* PCだけで改行する位置 */
   .abx-service .abx-story-inner p:not(.abx-story-en),
   .abx-origin .abx-story-inner p:not(.abx-story-en) { font-size: 13.5px; } /* OUR STORY の本文 (最後の一文も含めて) */
   .abx-title .sp-br { display: inline; } /* 「里親さんにとっての／うれしいこと」 */
@@ -7996,7 +8002,7 @@ a.pm-cta-btn { text-decoration: none; }
       <p class="abx-story-en" aria-hidden="true">OUR STORY</p>
       <h2 class="abx-story-title" id="abxStoryTitle">保護ハブが立ち上がった理由</h2>
       <p>「譲渡条件が合わなくて、保護団体から<br class="sp-br">断られてしまった」<br>「自分から諦めてしまった」<br>——こんな声を、これまでたくさん聞いてきました。</p>
-      <p>日本には1000団体以上もの保護団体があり、<br class="sp-br">譲渡条件やルールは1000通り。<br><span class="fit-line">自分のライフスタイルに合う保護団体と巡り合うには、</span><br class="sp-br">時間もかかるし、<br>時には断られ続けてしまう。</p>
+      <p>日本には1000団体以上もの保護団体があり、<br class="sp-br">譲渡条件やルールは1000通り。<br><span class="fit-line">自分のライフスタイルに合う保護団体と巡り合うには、</span><br class="sp-br">時間もかかるし、<br class="pc-br">時には断られ続けてしまう。</p>
       <p>「保護イヌ・ネコを迎えたい」という素敵な想いが、<br>ミスマッチで終わってしまう。</p>
       <p>保護ハブは、このすれ違いをなくすために<br class="sp-br">立ち上がりました。<br>自分のライフスタイルをもとに、<br>ぴったりな子と出会える。<br class="sp-br">そんな体験を届けたいと考えています。</p>
       <p class="abx-story-last">皆さんの素敵な想いが、確実に届く<br class="sp-br">サービスを目指しています。</p>
